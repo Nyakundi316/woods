@@ -1,0 +1,47 @@
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+
+[auth]
+enabled = true
+site_url = "http://localhost:8081"
+additional_redirect_urls = ["woods://"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+
+[functions.extract-style-dna]
+verify_jwt = true
+
+[functions.score-drop]
+verify_jwt = true
+
+[functions.cop-coach]
+verify_jwt = true
+
+[functions.legit-lens]
+verify_jwt = true
+
+[functions.outfit-pair]
+verify_jwt = true
+
+[functions.ingest-drops]
+verify_jwt = false
