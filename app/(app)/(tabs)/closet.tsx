@@ -1,11 +1,65 @@
-import { View, Text } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { router } from 'expo-router';
+import { useAuthStore } from '@/lib/stores/auth-store';
+import { useClosetItems } from '@/lib/queries/closet';
+import { ClosetItemCard } from '@/components/closet/ClosetItemCard';
 
-// Closet — built out in Phase 3
-export default function ClosetScreen() {
+function EmptyCloset() {
   return (
-    <View className="flex-1 bg-black items-center justify-center">
-      <Text className="text-white text-2xl font-bold tracking-widest">WOODS</Text>
-      <Text className="text-woods-stone mt-2">Closet — Phase 3</Text>
+    <View className="flex-1 items-center justify-center px-8">
+      <Text className="text-white text-xl font-semibold text-center mb-3">
+        Your closet is empty
+      </Text>
+      <Text className="text-woods-stone text-sm text-center mb-8">
+        Photograph items you own and Woods will catalogue them for outfit pairing and drop matching.
+      </Text>
+    </View>
+  );
+}
+
+export default function ClosetScreen() {
+  const { session } = useAuthStore();
+  const { data: items, isLoading } = useClosetItems(session?.user.id);
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-black items-center justify-center">
+        <ActivityIndicator color="#FFFFFF" />
+      </View>
+    );
+  }
+
+  return (
+    <View className="flex-1 bg-black">
+      {/* Header */}
+      <View className="px-4 pt-14 pb-4 flex-row items-center justify-between">
+        <Text className="text-white text-2xl font-bold tracking-widest">CLOSET</Text>
+        <Text className="text-woods-stone text-sm">
+          {items?.length ?? 0} item{items?.length !== 1 ? 's' : ''}
+        </Text>
+      </View>
+
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 4, paddingBottom: 100 }}
+        ListEmptyComponent={<EmptyCloset />}
+        renderItem={({ item }) => (
+          <ClosetItemCard
+            item={item}
+            onPress={() => router.push(`/closet/${item.id}`)}
+          />
+        )}
+      />
+
+      {/* FAB */}
+      <TouchableOpacity
+        onPress={() => router.push('/closet/add')}
+        className="absolute bottom-8 right-6 bg-white w-14 h-14 rounded-full items-center justify-center shadow-lg"
+      >
+        <Text className="text-black text-3xl leading-none">+</Text>
+      </TouchableOpacity>
     </View>
   );
 }

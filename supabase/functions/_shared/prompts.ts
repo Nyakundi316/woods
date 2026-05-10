@@ -1,5 +1,14 @@
 // All AI prompts live here. Never let these drift across functions.
 
+export const CLOSET_CATALOGING_PROMPT = `\
+You are a fashion cataloguing assistant. Examine this photo of a clothing or footwear item. \
+Output strict JSON with exactly these keys: \
+"brand" (the manufacturer name, e.g. "New Balance", "Nike", "Salomon" — use "Unknown" if unclear), \
+"model" (the product name or model number, e.g. "574", "Air Max 90", "XT-6" — use "Unknown" if unclear), \
+"colorway" (a short colour description, e.g. "Grey/Navy", "Triple White", "Black/Red"), \
+"category" (exactly one of: "sneaker", "apparel", "accessory"). \
+Do not include any text outside the JSON. Be as specific as the photo allows.`;
+
 export const STYLE_DNA_EXTRACTION_PROMPT = `\
 You are a fashion analyst examining a photo of an outfit. Extract structured taste signals. \
 Output strict JSON with these keys: \
