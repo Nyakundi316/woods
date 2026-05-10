@@ -39,7 +39,7 @@ export default function DropDetailScreen() {
   const handleWatchToggle = () => {
     if (!drop) return;
     toggleWatchlist.mutate(
-      { dropId: drop.id, isWatched: drop.isWatched },
+      { dropId: drop.id, isWatched: drop.isWatched, dropName: drop.name, releaseDate: drop.release_date },
       { onError: (e) => setError((e as Error).message) },
     );
   };

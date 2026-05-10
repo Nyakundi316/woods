@@ -7,6 +7,7 @@ import * as Sentry from '@sentry/react-native';
 import { initSentry, sendSentryTestEvent } from '@/lib/sentry';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import { registerForPushNotifications } from '@/lib/notifications';
 import type { Profile } from '@/types/profile';
 
 initSentry();
@@ -51,6 +52,9 @@ function RootLayout() {
             .eq('id', session.user.id)
             .single();
           setProfile(data as Profile | null);
+          if (event === 'SIGNED_IN') {
+            registerForPushNotifications(session.user.id).catch(() => undefined);
+          }
         } else {
           setProfile(null);
         }

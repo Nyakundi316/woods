@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import { scheduleDropAlert, cancelDropAlert } from '@/lib/notifications';
 import type { Drop, DropMatchScore, WatchlistItem, DropWithScore } from '@/types/drops';
 
 export const dropKeys = {
@@ -133,7 +134,9 @@ export function useScoreDrops(userId: string | undefined) {
 export function useToggleWatchlist(userId: string | undefined) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ dropId, isWatched }: { dropId: string; isWatched: boolean }) => {
+    mutationFn: async ({
+      dropId, isWatched, dropName, releaseDate,
+    }: { dropId: string; isWatched: boolean; dropName?: string; releaseDate?: string }) => {
       if (isWatched) {
         const { error } = await supabase
           .from('watchlist')
@@ -141,6 +144,7 @@ export function useToggleWatchlist(userId: string | undefined) {
           .eq('user_id', userId!)
           .eq('drop_id', dropId);
         if (error) throw error;
+        cancelDropAlert(dropId).catch(() => undefined);
         return { dropId, isWatched: false };
       } else {
         // any: stub Database type — replaced by supabase gen types in Phase 4 completion
@@ -148,6 +152,9 @@ export function useToggleWatchlist(userId: string | undefined) {
           .from('watchlist')
           .insert({ user_id: userId!, drop_id: dropId });
         if (error) throw error;
+        if (dropName && releaseDate) {
+          scheduleDropAlert(dropId, dropName, releaseDate).catch(() => undefined);
+        }
         return { dropId, isWatched: true };
       }
     },

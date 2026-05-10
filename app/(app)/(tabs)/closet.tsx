@@ -1,5 +1,6 @@
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { router } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { useClosetItems } from '@/lib/queries/closet';
 import { ClosetItemCard } from '@/components/closet/ClosetItemCard';
@@ -19,7 +20,7 @@ function EmptyCloset() {
 
 export default function ClosetScreen() {
   const { session } = useAuthStore();
-  const { data: items, isLoading } = useClosetItems(session?.user.id);
+  const { data: items, isLoading, refetch, isRefetching } = useClosetItems(session?.user.id);
 
   if (isLoading) {
     return (
@@ -45,17 +46,30 @@ export default function ClosetScreen() {
         numColumns={2}
         contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 4, paddingBottom: 100 }}
         ListEmptyComponent={<EmptyCloset />}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={refetch}
+            tintColor="#FFFFFF"
+          />
+        }
         renderItem={({ item }) => (
           <ClosetItemCard
             item={item}
-            onPress={() => router.push(`/closet/${item.id}`)}
+            onPress={() => {
+              Haptics.selectionAsync().catch(() => undefined);
+              router.push(`/closet/${item.id}`);
+            }}
           />
         )}
       />
 
       {/* FAB */}
       <TouchableOpacity
-        onPress={() => router.push('/closet/add')}
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+          router.push('/closet/add');
+        }}
         className="absolute bottom-8 right-6 bg-white w-14 h-14 rounded-full items-center justify-center shadow-lg"
       >
         <Text className="text-black text-3xl leading-none">+</Text>

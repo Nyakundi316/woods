@@ -1,4 +1,5 @@
 import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import type { DropWithScore } from '@/types/drops';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -59,7 +60,7 @@ export function DropCard({ drop, onPress, onWatchToggle }: Props) {
 
         {/* Watch button — top right overlay */}
         <TouchableOpacity
-          onPress={(e) => { e.stopPropagation(); onWatchToggle(); }}
+          onPress={(e) => { e.stopPropagation(); Haptics.selectionAsync().catch(() => undefined); onWatchToggle(); }}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           className="absolute top-3 right-3 bg-black/60 px-3 py-1.5 rounded-full"
         >
