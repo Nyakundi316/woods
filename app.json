@@ -34,6 +34,12 @@
       "expo-router",
       "expo-secure-store",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Woods reads your saved fits to build your Style DNA. Photos are only sent to our servers during analysis."
+        }
+      ],
+      [
         "expo-camera",
         {
           "cameraPermission": "Woods uses your camera to scan sneakers for authentication."

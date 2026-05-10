@@ -14,6 +14,12 @@ export default function RootIndex() {
   }
 
   if (!session) return <Redirect href="/(auth)/welcome" />;
-  if (!profile?.onboarding_completed) return <Redirect href="/(auth)/onboarding-profile" />;
+
+  // Profile not yet created → step 1 of onboarding
+  if (!profile) return <Redirect href="/(auth)/onboarding-profile" />;
+
+  // Profile created but onboarding not finished → step 2 (Style DNA)
+  if (!profile.onboarding_completed) return <Redirect href="/(auth)/style-dna" />;
+
   return <Redirect href="/(app)/(tabs)" />;
 }

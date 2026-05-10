@@ -42,10 +42,10 @@ export default function OnboardingProfileScreen() {
         preferred_currency: country.currency,
         shoe_size_us: sizeUS ? parseFloat(sizeUS) : null,
         shoe_size_eu: sizeEU ? parseFloat(sizeEU) : null,
-        onboarding_completed: true,
+        onboarding_completed: false, // set to true after Style DNA (Phase 2)
       });
       setProfile(profile);
-      router.replace('/(app)/(tabs)');
+      router.replace('/(auth)/style-dna');
     } catch (e: unknown) {
       const message = (e as { message?: string }).message ?? 'Could not save profile';
       setError(message.includes('duplicate') ? 'That username is taken' : message);
@@ -64,7 +64,7 @@ export default function OnboardingProfileScreen() {
             WOODS
           </Text>
           <Text className="text-woods-stone text-sm mb-10">
-            One last step — set up your profile.
+            Step 1 of 2 — tell us about yourself.
           </Text>
 
           <Input
