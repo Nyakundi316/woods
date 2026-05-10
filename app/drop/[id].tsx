@@ -141,7 +141,7 @@ export default function DropDetailScreen() {
             <Button
               label="Ask Cop Coach"
               variant="secondary"
-              onPress={() => router.push(`/cop-coach?dropId=${drop.id}`)}
+              onPress={() => router.push(`/cop-coach/${drop.id}`)}
             />
 
             {/* Buy link */}
